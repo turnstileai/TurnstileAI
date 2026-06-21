@@ -1,0 +1,48 @@
+{
+  "name": "@turnstileai/sdk",
+  "version": "0.1.7",
+  "description": "TypeScript SDK for TurnstileAI, a verification-first AI gateway",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "turnstileai": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node --test dist/test/**/*.test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ai",
+    "sdk",
+    "solana",
+    "verification",
+    "llm",
+    "typescript",
+    "turnstileai"
+  ],
+  "author": "TurnstileAI",
+  "license": "MIT",
+  "homepage": "https://github.com/turnstileai/TurnstileAI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turnstileai/TurnstileAI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/turnstileai/TurnstileAI/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
+  }
+}
