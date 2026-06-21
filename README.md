@@ -1,11 +1,21 @@
 # TurnstileAI SDK
 
 <p align="left">
-  <img src="https://img.shields.io/badge/npm-package-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=npm&logoColor=2563EB" alt="npm package" />
-  <img src="https://img.shields.io/badge/TypeScript-SDK-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=typescript&logoColor=2563EB" alt="TypeScript SDK" />
-  <img src="https://img.shields.io/badge/docs-available-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=gitbook&logoColor=2563EB" alt="docs available" />
-  <img src="https://img.shields.io/badge/license-MIT-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=open-source-initiative&logoColor=2563EB" alt="MIT license" />
-  <img src="https://img.shields.io/badge/open-source-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=github&logoColor=2563EB" alt="open source" />
+  <a href="https://www.npmjs.com/package/@turnstileai/sdk">
+    <img src="https://img.shields.io/badge/npm-package-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=npm&logoColor=2563EB" alt="npm package" />
+  </a>
+  <a href="./docs/introduction.md">
+    <img src="https://img.shields.io/badge/docs-available-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=gitbook&logoColor=2563EB" alt="docs available" />
+  </a>
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=open-source-initiative&logoColor=2563EB" alt="MIT license" />
+  </a>
+  <a href="https://github.com/turnstileai/TurnstileAI">
+    <img src="https://img.shields.io/badge/open-source-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=github&logoColor=2563EB" alt="open source" />
+  </a>
+  <a href="https://github.com/turnstileai/TurnstileAI">
+    <img src="https://img.shields.io/badge/TypeScript-SDK-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=typescript&logoColor=2563EB" alt="TypeScript SDK" />
+  </a>
 </p>
 
 TypeScript SDK for TurnstileAI.
