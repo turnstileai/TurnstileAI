@@ -1,75 +1,60 @@
-# TurnstileAI
+# TurnstileAI SDK
 
-<p align="center">
-  <strong>A verification-first AI gateway for trustable completions, receipts, and on-chain proof.</strong>
-</p>
+TypeScript SDK for TurnstileAI.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Solana-Built%20on%20Solana-6EC1FF?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Verification-First-FFFFFF?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Status-Early%20Build-8FD3FF?style=for-the-badge" />
-</p>
+TurnstileAI routes AI requests, records execution details, and returns signed compute receipts so you can inspect what happened after each call.
 
-## Overview
+## Why use TurnstileAI
 
-TurnstileAI is a Solana-based verification layer for AI inference. It is designed to make model outputs easier to inspect, verify, and trust through receipts, proof-aware routing, and audit-friendly records.
+- Route requests across providers.
+- Get signed receipts with model, provider, usage, latency, and cost.
+- Apply routing policies for speed, cost, or reliability.
+- Keep an audit trail for agents and production workloads.
+- Use an OpenAI-style integration pattern.
 
-## Features
+## Install
 
-- Verification-first AI request flow.
-- Receipt-oriented inference responses.
-- Solana-compatible on-chain proof direction.
-- Provider-aware routing and record visibility.
-- SDK and gateway architecture designed for integration into real apps.
+```bash
+npm install @turnstileai/sdk
+```
 
-## Why it matters
-
-Most AI products return output without giving developers a clean way to verify where it came from or how it was produced. TurnstileAI is built to add a stronger trust layer around inference.
-
-## Quickstart
+## Quick start
 
 ```ts
 import { TurnstileAI } from "@turnstileai/sdk";
 
 const client = new TurnstileAI({
-  apiKey: process.env.TURNSTILEAI_API_KEY!
+  apiKey: process.env.TURNSTILE_API_KEY!
 });
 
-const result = await client.chat({
+const response = await client.chat.completions.create({
   model: "openrouter/llama-3.1-70b",
   messages: [
-    { role: "user", content: "Explain zero-knowledge rollups simply." }
+    { role: "user", content: "Explain Solana finality simply." }
   ],
-  receipt: true,
-  anchor: "solana"
+  extra_body: {
+    receipt: true,
+    policy: "cheapest",
+    anchor: "solana"
+  }
 });
 
-console.log(result.output);
-console.log(result.record);
-console.log(result.verification);
+console.log(response.choices.message.content);
+console.log(response.compute_receipt);
 ```
 
-## Core ideas
+## What you get back
 
-- Trustable completions.
-- Verification receipts.
-- On-chain proof pathways.
-- Better auditability for AI outputs.
-- Developer-first integration flow.
+When receipts are enabled, the response includes the model output plus receipt metadata you can inspect later.
 
-## Roadmap
+```ts
+console.log(response.compute_receipt.id);
+console.log(response.compute_receipt.provider);
+console.log(response.compute_receipt.tokens);
+console.log(response.compute_receipt.costUsd);
+```
 
-- SDK expansion.
-- Gateway refinement.
-- Stronger proof and receipt flows.
-- Better verification UX.
-- More complete docs and examples.
+## Authentication
 
-## Repository
+Set your API key as an environment variable:
 
-- npm package: `@turnstileai/sdk`
-- GitHub: [turnstileai/TurnstileAI](https://github.com/turnstileai/TurnstileAI)
-
-## License
-
-MIT
