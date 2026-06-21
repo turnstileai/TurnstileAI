@@ -1,5 +1,13 @@
 # TurnstileAI SDK
 
+<p align="left">
+  <img src="https://img.shields.io/badge/npm-package-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=npm&logoColor=2563EB" alt="npm package" />
+  <img src="https://img.shields.io/badge/TypeScript-SDK-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=typescript&logoColor=2563EB" alt="TypeScript SDK" />
+  <img src="https://img.shields.io/badge/docs-available-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=gitbook&logoColor=2563EB" alt="docs available" />
+  <img src="https://img.shields.io/badge/license-MIT-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=open-source-initiative&logoColor=2563EB" alt="MIT license" />
+  <img src="https://img.shields.io/badge/open-source-EAF4FF?style=for-the-badge&labelColor=D8EBFF&color=EAF4FF&logo=github&logoColor=2563EB" alt="open source" />
+</p>
+
 TypeScript SDK for TurnstileAI.
 
 TurnstileAI routes AI requests, records execution details, and returns signed compute receipts so you can inspect what happened after each call.
