@@ -1,4 +1,5 @@
 export { TurnstileAI } from "./client";
+<<<<<<< HEAD
 export { ReceiptsResource } from "./receipts";
 
 export {
@@ -18,3 +19,24 @@ export type {
   ReceiptAnchor,
   ReceiptVerificationResponse
 } from "./types";
+=======
+export {
+  TurnstileError,
+  TurnstileAuthError,
+  TurnstileRequestError,
+  TurnstileVerificationError,
+} from "./errors";
+
+export type {
+  TurnstileConfig,
+  InferenceOptions,
+  RunRecord,
+  LedgerCheckpoint,
+  VerificationResult,
+  ProviderHealth,
+  UsageOverview,
+  RouteMode,
+  LedgerMode,
+  TurnstileApiErrorBody,
+} from "./types";
+>>>>>>> 5531b75e9745b637b2f4cfe96769787bdf64e51c

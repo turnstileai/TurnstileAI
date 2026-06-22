@@ -1,5 +1,6 @@
 {
   "name": "@turnstileai/sdk",
+<<<<<<< HEAD
   "version": "0.1.10",
   "description": "TypeScript SDK for verified AI inference, routing, and signed compute receipts.",
   "main": "dist/index.js",
@@ -17,11 +18,28 @@
   ],
   "scripts": {
     "build": "tsc",
+=======
+  "version": "0.1.7",
+  "description": "TypeScript SDK for TurnstileAI, a verification-first AI gateway",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "turnstileai": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node --test dist/test/**/*.test.js",
+>>>>>>> 5531b75e9745b637b2f4cfe96769787bdf64e51c
     "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai",
     "sdk",
+<<<<<<< HEAD
     "typescript",
     "openai",
     "inference",
@@ -29,6 +47,13 @@
     "receipt",
     "solana",
     "routing"
+=======
+    "solana",
+    "verification",
+    "llm",
+    "typescript",
+    "turnstileai"
+>>>>>>> 5531b75e9745b637b2f4cfe96769787bdf64e51c
   ],
   "author": "TurnstileAI",
   "license": "MIT",

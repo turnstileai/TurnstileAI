@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export class TurnstileAIError extends Error {
   constructor(message: string) {
     super(message);
@@ -34,4 +35,40 @@ export class TurnstileAIVerificationError extends TurnstileAIError {
     this.receiptId = receiptId;
     Object.setPrototypeOf(this, new.target.prototype);
   }
+=======
+export class TurnstileError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "TurnstileError";
+  }
+}
+
+export class TurnstileAuthError extends TurnstileError {
+  constructor(message: string) {
+    super(message);
+    this.name = "TurnstileAuthError";
+  }
+}
+
+export class TurnstileRequestError extends TurnstileError {
+  statusCode: number;
+  code?: string;
+
+  constructor(message: string, statusCode: number, code?: string) {
+    super(message);
+    this.name = "TurnstileRequestError";
+    this.statusCode = statusCode;
+    this.code = code;
+  }
+}
+
+export class TurnstileVerificationError extends TurnstileError {
+  recordId: string;
+
+  constructor(message: string, recordId: string) {
+    super(message);
+    this.name = "TurnstileVerificationError";
+    this.recordId = recordId;
+  }
+>>>>>>> 5531b75e9745b637b2f4cfe96769787bdf64e51c
 }
