@@ -182,6 +182,52 @@ console.log(result.signatureValid);
 console.log(result.anchorMatched);
 ```
 
+## CLI
+
+The package includes a command-line interface for working with TurnstileAI directly from your terminal.
+
+### Commands
+
+```bash
+turnstileai login
+turnstileai receipts list
+turnstileai receipts get <receiptId>
+turnstileai receipts verify <receiptId>
+turnstileai providers
+turnstileai usage
+```
+
+### API key
+
+Pass your API key directly:
+
+```bash
+npx @turnstileai/sdk login --key=ts_live_abc123
+```
+
+Or set an environment variable:
+
+```bash
+export TURNSTILE_API_KEY=ts_live_abc123
+npx @turnstileai/sdk usage
+```
+
+On Windows Command Prompt:
+
+```cmd
+set TURNSTILE_API_KEY=ts_live_abc123
+npx @turnstileai/sdk usage
+```
+
+### Examples
+
+```bash
+npx @turnstileai/sdk receipts list --key=ts_live_abc123
+npx @turnstileai/sdk receipts get rcpt_123 --key=ts_live_abc123
+npx @turnstileai/sdk receipts verify rcpt_123 --key=ts_live_abc123
+npx @turnstileai/sdk providers --key=ts_live_abc123
+```
+
 ## OpenAI compatibility
 
 If you already use an OpenAI-style flow, the integration stays familiar.
