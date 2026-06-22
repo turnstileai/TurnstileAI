@@ -20,6 +20,8 @@
 
 TypeScript SDK for verified AI inference, routing, and signed compute receipts.
 
+Each receipt can include a verifiable request hash, response hash, model/provider metadata, TurnstileAI signature, and optional on-chain inclusion proof so anyone can independently check integrity after the call.
+
 TurnstileAI sits between your app and model providers. It lets you send chat completion requests, apply routing preferences, and retrieve or verify compute receipts for each request.
 
 ## Why use TurnstileAI
