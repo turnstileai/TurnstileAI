@@ -44,11 +44,15 @@ export interface ComputeReceipt {
     model: string;
     provider: string;
     tokens: number;
+    inputTokens?: number;
+    outputTokens?: number;
     latencySeconds: number;
     costUsd: number;
     promptHash?: string;
     responseHash?: string;
-    signature: string;
+    signature?: string;
+    keyId?: string;
+    createdAt?: string;
     verified: boolean;
     anchor?: ReceiptAnchor | null;
 }
@@ -131,5 +135,21 @@ export interface TurnstileChatMessage {
 }
 export interface TurnstileChatRequest {
     model: string;
+}
+export interface ReceiptPublicKey {
+    id: string;
+    algorithm: "Ed25519";
+    publicKey: string;
+    createdAt: string;
+    expiresAt: string | null;
+    status: "active" | "rotated" | "revoked";
+}
+export interface OfflineVerificationResult {
+    valid: boolean;
+    reason: string;
+    receiptId: string;
+    keyId?: string;
+    payload?: string;
+    checkedAt: string;
 }
 //# sourceMappingURL=types.d.ts.map

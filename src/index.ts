@@ -34,3 +34,11 @@ export type {
   LedgerMode,
   TurnstileApiErrorBody,
 } from "./types";
+export {
+  verifyReceiptSignature,
+  verifyInclusionProof,
+  buildSignaturePayload,
+} from "./verifier";
+
+export type { ReceiptSignaturePayload } from "./verifier";
+export type { InclusionProof } from "./receipts";

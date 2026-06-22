@@ -73,15 +73,18 @@ export interface ComputeReceipt {
   model: string;
   provider: string;
   tokens: number;
+  inputTokens?: number;     
+  outputTokens?: number;     
   latencySeconds: number;
   costUsd: number;
   promptHash?: string;
   responseHash?: string;
-  signature: string;
+  signature?: string;        
+  keyId?: string;            
+  createdAt?: string;        
   verified: boolean;
   anchor?: ReceiptAnchor | null;
 }
-
 export interface ReceiptVerificationResponse {
   status: string;
   signatureValid: boolean;
@@ -174,7 +177,7 @@ export interface TurnstileApiErrorBody {
   details?: unknown;
 }
 
-// ─── Chat (extended) ──────────────────────────────────────────────────────────
+// ─── Chat ──────────────────────────────────────────────────────────
 
 export interface TurnstileChatMessage {
   role: "system" | "user" | "assistant";
@@ -183,4 +186,21 @@ export interface TurnstileChatMessage {
 
 export interface TurnstileChatRequest {
   model: string;
+}
+export interface ReceiptPublicKey {
+  id: string;
+  algorithm: "Ed25519";
+  publicKey: string;
+  createdAt: string;
+  expiresAt: string | null;
+  status: "active" | "rotated" | "revoked";
+}
+
+export interface OfflineVerificationResult {
+  valid: boolean;
+  reason: string;
+  receiptId: string;
+  keyId?: string;
+  payload?: string;
+  checkedAt: string;
 }
