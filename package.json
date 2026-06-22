@@ -5,9 +5,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "bin": {
-    "turnstileai": "./dist/cli.js"
-  },
+  "bin": "./dist/cli.js",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
