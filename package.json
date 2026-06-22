@@ -1,6 +1,6 @@
 {
   "name": "@turnstileai/sdk",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "TypeScript SDK for verified AI inference, routing, and signed compute receipts.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
