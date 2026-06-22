@@ -1,23 +1,21 @@
 export { TurnstileAI } from "./client";
 export { ReceiptsResource } from "./receipts";
 
-// Error classes
 export {
-  TurnstileError,
-  TurnstileAuthError,
-  TurnstileRequestError,
-  TurnstileVerificationError,
   TurnstileAIError,
   TurnstileAIAuthError,
   TurnstileAIAPIError,
   TurnstileAIVerificationError,
 } from "./errors";
 
-// Types
+export {
+  verifyReceiptSignature,
+  verifyInclusionProof,
+  buildSignaturePayload,
+} from "./verifier";
+
 export type {
-  TurnstileConfig,
   TurnstileAIConfig,
-  InferenceOptions,
   ChatMessage,
   ChatCompletionRequest,
   ChatCompletionResponse,
@@ -25,20 +23,9 @@ export type {
   ComputeReceipt,
   ReceiptAnchor,
   ReceiptVerificationResponse,
-  RunRecord,
-  LedgerCheckpoint,
-  VerificationResult,
-  ProviderHealth,
-  UsageOverview,
-  RouteMode,
-  LedgerMode,
-  TurnstileApiErrorBody,
+  OfflineVerificationResult,
+  ReceiptPublicKey,
 } from "./types";
-export {
-  verifyReceiptSignature,
-  verifyInclusionProof,
-  buildSignaturePayload,
-} from "./verifier";
 
 export type { ReceiptSignaturePayload } from "./verifier";
 export type { InclusionProof } from "./receipts";
