@@ -18,18 +18,16 @@
   </a>
 </p>
 
-TypeScript SDK for verified AI inference, routing, and signed compute receipts.
+TypeScript SDK for TurnstileAI, focused on signed compute receipts, request integrity, and OpenAI-compatible client workflows.
 
-Each receipt can include a verifiable request hash, response hash, model/provider metadata, TurnstileAI signature, and optional on-chain inclusion proof so anyone can independently check integrity after the call.
+Each compute receipt can include request and response hashes, model and provider metadata, usage data, TurnstileAI signatures, and optional inclusion proof data for independent verification.
 
-TurnstileAI sits between your app and model providers. It lets you send chat completion requests, apply routing preferences, and retrieve or verify compute receipts for each request.
+## Why TurnstileAI
 
-## Why use TurnstileAI
-
-- Route requests across providers.
-- Get signed receipts with model, provider, usage, latency, and cost.
-- Apply routing policies for speed, cost, or reliability.
-- Keep an audit trail for agents and production workloads.
+- Standardize AI request and receipt handling in one SDK.
+- Verify signed compute receipts offline.
+- Validate Merkle inclusion proofs for anchored batches.
+- Keep a typed audit trail for agent and production workloads.
 - Use an OpenAI-style integration pattern.
 
 ## Installation
@@ -64,20 +62,17 @@ const response = await client.chat.completions.create({
   }
 });
 
-console.log(response.choices.message.content);
 console.log(response.compute_receipt);
 ```
 
 ## Configuration
-
-Create a client with your API key:
 
 ```ts
 import { TurnstileAI } from "@turnstileai/sdk";
 
 const client = new TurnstileAI({
   apiKey: process.env.TURNSTILE_API_KEY!,
-  baseURL: "https://turnstileai.net",
+  baseURL: "https://gateway.turnstileai.net/api",
   defaultPolicy: "highest-reputation",
   defaultAnchor: "solana"
 });
@@ -92,35 +87,41 @@ const client = new TurnstileAI({
 | `defaultPolicy` | `string` | No | Default routing policy for requests. |
 | `defaultAnchor` | `string` | No | Default anchor target for requests. |
 
-## Chat completions
+## Verification
 
-Use the client to send chat completion requests.
+The SDK includes helpers for receipt verification and inclusion proof validation.
+
+### Verify a receipt signature
 
 ```ts
-import { TurnstileAI } from "@turnstileai/sdk";
+import {
+  verifyReceiptSignature,
+  buildSignaturePayload
+} from "@turnstileai/sdk";
 
-const client = new TurnstileAI({
-  apiKey: process.env.TURNSTILE_API_KEY!
-});
+const payload = buildSignaturePayload(receipt);
+const result = await verifyReceiptSignature(receipt, publicKey);
 
-const response = await client.chat.completions.create({
-  model: "openai/gpt-4o-mini",
-  messages: [
-    { role: "system", content: "You are concise." },
-    { role: "user", content: "Summarize Solana finality in 3 bullet points." }
-  ],
-  extra_body: {
-    receipt: true
-  }
-});
-
-console.log(response.choices.message.content);
-console.log(response.compute_receipt?.id);
+console.log(payload);
+console.log(result.valid);
 ```
+
+### Verify an inclusion proof
+
+```ts
+import { verifyInclusionProof } from "@turnstileai/sdk";
+
+const proof = await client.receipts.getInclusionProof(receiptId);
+const result = await verifyInclusionProof(proof);
+
+console.log(result.valid);
+```
+
+See `docs/receipt-spec.md` for the full verification format.
 
 ## Routing policies
 
-TurnstileAI can choose providers using different policies.
+TurnstileAI supports provider routing policies for different execution goals.
 
 | Policy | Key | Use case |
 |---|---|---|
@@ -183,14 +184,14 @@ console.log(result.anchorMatched);
 
 ## OpenAI compatibility
 
-If you already use an OpenAI-style flow, the integration can stay familiar.
+If you already use an OpenAI-style flow, the integration stays familiar.
 
 ```ts
 import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.TURNSTILE_API_KEY!,
-  baseURL: "https://turnstileai.net"
+  baseURL: "https://gateway.turnstileai.net/api"
 });
 
 const response = await client.chat.completions.create({
@@ -270,27 +271,6 @@ It also exports these types:
 - `ComputeReceipt`
 - `ReceiptAnchor`
 - `ReceiptVerificationResponse`
-
-## CLI
-
-If you wire the CLI into your published package later, the current commands are designed around receipt lookup and verification:
-
-```bash
-turnstileai receipt:get <receiptId>
-turnstileai receipt:verify <receiptId>
-```
-
-Set your API key before using the CLI:
-
-```bash
-export TURNSTILE_API_KEY=your_key_here
-```
-
-On Windows Command Prompt:
-
-```cmd
-set TURNSTILE_API_KEY=your_key_here
-```
 
 ## Development
 
