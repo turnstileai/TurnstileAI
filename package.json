@@ -1,6 +1,6 @@
 {
   "name": "@turnstileai/sdk",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Official TypeScript/JavaScript SDK for the TurnstileAI verifiable inference gateway.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-"build": "tsc",
+    "build": "tsc",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "prepublishOnly": "npm run build"
@@ -43,7 +43,10 @@
   "bugs": {
     "url": "https://github.com/turnstileai/TurnstileAI/issues"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "dependencies": {
     "openai": "^4.0.0",
     "node-fetch": "^3.3.2"
