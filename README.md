@@ -77,7 +77,7 @@ import { TurnstileAI } from "@turnstileai/sdk";
 
 const client = new TurnstileAI({
   apiKey: process.env.TURNSTILE_API_KEY!,
-  baseURL: "https://api.turnstileai.com/v1",
+  baseURL: "https://turnstileai.net",
   defaultPolicy: "highest-reputation",
   defaultAnchor: "solana"
 });
@@ -190,7 +190,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.TURNSTILE_API_KEY!,
-  baseURL: "https://api.turnstileai.com/v1"
+  baseURL: "https://turnstileai.net"
 });
 
 const response = await client.chat.completions.create({

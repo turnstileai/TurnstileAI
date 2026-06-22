@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TurnstileAI = void 0;
 const openai_1 = __importDefault(require("openai"));
 const errors_1 = require("./errors");
-const DEFAULT_BASE_URL = "https://api.turnstileai.com/v1";
+const DEFAULT_BASE_URL = "https://gateway.turnstileai.net/api";
 class TurnstileAI {
     constructor(config) {
         this.receipts = {

@@ -13,7 +13,7 @@ import type {
   ChatCompletionResponse,
 } from "./types";
 
-const DEFAULT_BASE_URL = "https://api.turnstileai.com/v1";
+const DEFAULT_BASE_URL = "https://gateway.turnstileai.net/api";
 
 export class TurnstileAI {
   private readonly apiKey: string;
