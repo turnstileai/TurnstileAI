@@ -1,59 +1,62 @@
 {
   "name": "@turnstileai/sdk",
-  "version": "0.1.14",
-  "description": "TypeScript SDK for verified AI inference, routing, and signed compute receipts.",
+  "version": "0.1.13",
+  "description": "Official TypeScript/JavaScript SDK for the TurnstileAI verifiable inference gateway.",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "bin": {
     "turnstileai": "dist/cli.js"
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
   "scripts": {
-    "build": "tsc",
-    "test": "npm run build && node --test dist/test/**/*.test.js",
+"build": "tsc",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai",
-    "sdk",
-    "typescript",
-    "openai",
     "inference",
-    "verification",
-    "receipt",
-    "solana",
-    "routing",
+    "gateway",
+    "receipts",
+    "verifiable",
+    "openai",
     "llm",
+    "audit",
+    "solana",
     "turnstileai"
   ],
   "author": "TurnstileAI",
   "license": "MIT",
-  "homepage": "https://github.com/turnstileai/TurnstileAI",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/turnstileai/TurnstileAI.git"
+    "url": "https://github.com/turnstileai/TurnstileAI"
   },
+  "homepage": "https://github.com/turnstileai/TurnstileAI",
   "bugs": {
     "url": "https://github.com/turnstileai/TurnstileAI/issues"
   },
-  "engines": {
-    "node": ">=18"
-  },
+  "files": ["dist", "README.md"],
   "dependencies": {
-    "openai": "^4.0.0"
+    "openai": "^4.0.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
-    "typescript": "^5.0.0"
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "eslint": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

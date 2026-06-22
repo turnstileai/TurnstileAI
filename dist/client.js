@@ -14,8 +14,16 @@ class TurnstileAI {
                 return this.request(`/receipts/${receiptId}`);
             },
             verify: async (receiptId) => {
-                return this.request(`/receipts/${receiptId}/verify`);
+                return this.request(`/receipts/${receiptId}/verify`, {
+                    method: "POST"
+                });
             },
+            getInclusionProof: async (receiptId) => {
+                return this.request(`/receipts/${receiptId}/proof`);
+            },
+            getPublicKeys: async () => {
+                return this.request("/keys");
+            }
         };
         this.records = {
             get: async (recordId) => {
@@ -36,7 +44,7 @@ class TurnstileAI {
             },
             verify: async (recordId) => {
                 return this.request(`/records/${recordId}/verify`);
-            },
+            }
         };
         this.providers = {
             list: async () => {
@@ -44,12 +52,12 @@ class TurnstileAI {
             },
             get: async (providerId) => {
                 return this.request(`/providers/${providerId}`);
-            },
+            }
         };
         this.usage = {
             overview: async (period = "month") => {
                 return this.request(`/usage/overview?period=${period}`);
-            },
+            }
         };
         if (!config.apiKey) {
             throw new errors_1.TurnstileAuthError("Missing TurnstileAI API key.");

@@ -2,96 +2,129 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("./client");
-const errors_1 = require("./errors");
-const args = process.argv.slice(2);
-const command = args[0];
-const subcommand = args[1];
-function readKey() {
-    const inline = args.find((arg) => arg.startsWith("--key="));
-    if (inline)
-        return inline.replace("--key=", "");
-    if (process.env.TURNSTILEAI_API_KEY)
-        return process.env.TURNSTILEAI_API_KEY;
-    if (process.env.TURNSTILE_API_KEY)
-        return process.env.TURNSTILE_API_KEY;
-    console.error("Missing API key. Use --key=ts_... or set TURNSTILEAI_API_KEY");
-    process.exit(1);
+const verifier_1 = require("./verifier");
+function parseArgs(argv) {
+    const command = [];
+    const flags = {};
+    for (let i = 0; i < argv.length; i++) {
+        const arg = argv[i];
+        if (arg === "--json") {
+            flags.json = true;
+            continue;
+        }
+        if (arg === "--api-key") {
+            flags.apiKey = argv[i + 1];
+            i++;
+            continue;
+        }
+        if (arg === "--base-url") {
+            flags.baseURL = argv[i + 1];
+            i++;
+            continue;
+        }
+        command.push(arg);
+    }
+    return { command, flags };
 }
-function help() {
+function getApiKey(flags) {
+    return flags.apiKey || process.env.TURNSTILE_API_KEY || "";
+}
+function printJson(data) {
+    console.log(JSON.stringify(data, null, 2));
+}
+function printUsage() {
     console.log(`
-turnstileai <command>
+TurnstileAI CLI
 
-Commands:
-  auth check
-  receipt get <id>
-  receipt verify <id>
-  providers list
-  usage overview
-
-Examples:
-  turnstileai auth check --key=ts_live_xxx
-  turnstileai receipt verify rcpt_123 --key=ts_live_xxx
-  turnstileai usage overview
+Usage:
+  turnstileai receipts get <receiptId> [--api-key KEY] [--base-url URL] [--json]
+  turnstileai receipts proof <receiptId> [--api-key KEY] [--base-url URL] [--json]
+  turnstileai receipts verify <receiptId> [--api-key KEY] [--base-url URL] [--json]
+  turnstileai keys list [--api-key KEY] [--base-url URL] [--json]
 `);
 }
 async function main() {
-    if (!command || command === "--help" || command === "-h") {
-        help();
-        return;
+    const { command, flags } = parseArgs(process.argv.slice(2));
+    if (command.length === 0) {
+        printUsage();
+        process.exit(1);
     }
-    const apiKey = readKey();
-    const client = new client_1.TurnstileAI({ apiKey });
+    const apiKey = getApiKey(flags);
+    const client = new client_1.TurnstileAI({
+        apiKey,
+        ...(flags.baseURL ? { baseURL: flags.baseURL } : {}),
+    });
+    const [resource, action, id] = command;
     try {
-        if (command === "auth" && subcommand === "check") {
-            console.log("Authentication ok");
-            return;
-        }
-        if (command === "receipt" && subcommand === "get") {
-            const id = args[2];
-            if (!id) {
-                console.error("Usage: turnstileai receipt get <id>");
-                process.exit(1);
-            }
+        if (resource === "receipts" && action === "get" && id) {
             const receipt = await client.receipts.get(id);
-            console.log(JSON.stringify(receipt, null, 2));
+            if (flags.json)
+                return printJson(receipt);
+            console.log(`Receipt: ${receipt.id}`);
+            console.log(`Provider: ${receipt.provider}`);
+            console.log(`Model: ${receipt.model}`);
+            console.log(`Verified: ${String(receipt.verified)}`);
             return;
         }
-        if (command === "receipt" && subcommand === "verify") {
-            const id = args[2];
-            if (!id) {
-                console.error("Usage: turnstileai receipt verify <id>");
-                process.exit(1);
+        if (resource === "receipts" && action === "proof" && id) {
+            const proof = await client.receipts.getInclusionProof(id);
+            if (flags.json)
+                return printJson(proof);
+            console.log(`Receipt: ${id}`);
+            console.log(`Batch ID: ${proof.batchId}`);
+            console.log(`Leaf Index: ${proof.leafIndex}`);
+            console.log(`Batch Root: ${proof.batchRoot}`);
+            console.log(`Proof Length: ${proof.proof.length}`);
+            return;
+        }
+        if (resource === "receipts" && action === "verify" && id) {
+            const receipt = await client.receipts.get(id);
+            const proof = await client.receipts.getInclusionProof(id);
+            const keys = await client.receipts.getPublicKeys();
+            const publicKey = keys.find((k) => k.id === receipt.keyId);
+            if (!publicKey) {
+                throw new Error(`No public key found for keyId: ${receipt.keyId}`);
             }
-            const result = await client.receipts.verify(id);
-            console.log(`status: ${result.status}`);
-            console.log(`signatureValid: ${result.signatureValid}`);
-            console.log(`anchorMatched: ${result.anchorMatched}`);
+            const signature = await (0, verifier_1.verifyReceiptSignature)(receipt, publicKey);
+            const inclusion = await (0, verifier_1.verifyInclusionProof)(proof);
+            const result = {
+                receiptId: receipt.id,
+                keyId: receipt.keyId,
+                signatureValid: signature.valid,
+                inclusionValid: inclusion.valid,
+                verified: signature.valid && inclusion.valid,
+                signatureReason: signature.reason,
+                inclusionReason: inclusion.reason,
+            };
+            if (flags.json)
+                return printJson(result);
+            console.log(`Receipt: ${result.receiptId}`);
+            console.log(`Key ID: ${result.keyId}`);
+            console.log(`Signature: ${result.signatureValid ? "valid" : "invalid"}`);
+            console.log(`Inclusion Proof: ${result.inclusionValid ? "valid" : "invalid"}`);
+            console.log(`Verified: ${result.verified ? "yes" : "no"}`);
             return;
         }
-        if (command === "providers" && subcommand === "list") {
-            const providers = await client.providers.list();
-            for (const p of providers) {
-                console.log(`${p.label}  ${p.trustTier}  ${p.uptimePercent}% uptime  ${p.avgLatencyMs}ms`);
+        if (resource === "keys" && action === "list") {
+            const keys = await client.receipts.getPublicKeys();
+            if (flags.json)
+                return printJson(keys);
+            for (const key of keys) {
+                console.log(`${key.id}  ${key.status}  ${key.algorithm}`);
             }
             return;
         }
-        if (command === "usage" && subcommand === "overview") {
-            const usage = await client.usage.overview("month");
-            console.log(JSON.stringify(usage, null, 2));
-            return;
-        }
-        help();
+        printUsage();
+        process.exit(1);
     }
     catch (err) {
-        if (err instanceof errors_1.TurnstileAuthError) {
-            console.error(`Auth error: ${err.message}`);
+        if (flags.json) {
+            printJson({
+                error: err instanceof Error ? err.message : String(err),
+            });
             process.exit(1);
         }
-        if (err instanceof errors_1.TurnstileRequestError) {
-            console.error(`Request error ${err.statusCode}: ${err.message}`);
-            process.exit(1);
-        }
-        console.error(String(err));
+        console.error(`Error: ${err instanceof Error ? err.message : String(err)}`);
         process.exit(1);
     }
 }

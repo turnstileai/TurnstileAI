@@ -5,13 +5,15 @@ import {
 } from "./errors";
 import type {
   TurnstileConfig,
+  ComputeReceipt,
+  OfflineVerificationResult,
+  ReceiptPublicKey,
   RunRecord,
   VerificationResult,
   ProviderHealth,
-  UsageOverview,
-  ChatCompletionRequest,
-  ChatCompletionResponse,
+  UsageOverview
 } from "./types";
+import type { InclusionProof } from "./receipts";
 
 const DEFAULT_BASE_URL = "https://gateway.turnstileai.net/api";
 
@@ -49,13 +51,23 @@ export class TurnstileAI {
   }
 
   public receipts = {
-    get: async (receiptId: string): Promise<RunRecord> => {
-      return this.request<RunRecord>(`/receipts/${receiptId}`);
+    get: async (receiptId: string): Promise<ComputeReceipt> => {
+      return this.request<ComputeReceipt>(`/receipts/${receiptId}`);
     },
 
-    verify: async (receiptId: string): Promise<VerificationResult> => {
-      return this.request<VerificationResult>(`/receipts/${receiptId}/verify`);
+    verify: async (receiptId: string): Promise<OfflineVerificationResult> => {
+      return this.request<OfflineVerificationResult>(`/receipts/${receiptId}/verify`, {
+        method: "POST"
+      });
     },
+
+    getInclusionProof: async (receiptId: string): Promise<InclusionProof> => {
+      return this.request<InclusionProof>(`/receipts/${receiptId}/proof`);
+    },
+
+    getPublicKeys: async (): Promise<ReceiptPublicKey[]> => {
+      return this.request<ReceiptPublicKey[]>("/keys");
+    }
   };
 
   public records = {
@@ -80,7 +92,7 @@ export class TurnstileAI {
 
     verify: async (recordId: string): Promise<VerificationResult> => {
       return this.request<VerificationResult>(`/records/${recordId}/verify`);
-    },
+    }
   };
 
   public providers = {
@@ -90,13 +102,15 @@ export class TurnstileAI {
 
     get: async (providerId: string): Promise<ProviderHealth> => {
       return this.request<ProviderHealth>(`/providers/${providerId}`);
-    },
+    }
   };
 
   public usage = {
-    overview: async (period: "day" | "week" | "month" = "month"): Promise<UsageOverview> => {
+    overview: async (
+      period: "day" | "week" | "month" = "month"
+    ): Promise<UsageOverview> => {
       return this.request<UsageOverview>(`/usage/overview?period=${period}`);
-    },
+    }
   };
 
   private async request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -119,6 +133,7 @@ export class TurnstileAI {
       try {
         body = await res.json();
       } catch {}
+
       throw new TurnstileRequestError(
         body?.message ?? `Request failed with status ${res.status}`,
         res.status,

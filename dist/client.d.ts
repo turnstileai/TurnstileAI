@@ -1,5 +1,6 @@
 import OpenAI from "openai";
-import type { TurnstileConfig, RunRecord, VerificationResult, ProviderHealth, UsageOverview } from "./types";
+import type { TurnstileConfig, ComputeReceipt, OfflineVerificationResult, ReceiptPublicKey, RunRecord, VerificationResult, ProviderHealth, UsageOverview } from "./types";
+import type { InclusionProof } from "./receipts";
 export declare class TurnstileAI {
     private readonly apiKey;
     private readonly baseURL;
@@ -10,8 +11,10 @@ export declare class TurnstileAI {
     readonly models: OpenAI["models"];
     constructor(config: TurnstileConfig);
     receipts: {
-        get: (receiptId: string) => Promise<RunRecord>;
-        verify: (receiptId: string) => Promise<VerificationResult>;
+        get: (receiptId: string) => Promise<ComputeReceipt>;
+        verify: (receiptId: string) => Promise<OfflineVerificationResult>;
+        getInclusionProof: (receiptId: string) => Promise<InclusionProof>;
+        getPublicKeys: () => Promise<ReceiptPublicKey[]>;
     };
     records: {
         get: (recordId: string) => Promise<RunRecord>;
