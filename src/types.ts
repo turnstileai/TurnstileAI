@@ -1,10 +1,37 @@
-<<<<<<< HEAD
-export interface TurnstileAIConfig {
+// ─── Shared primitives ───────────────────────────────────────────────────────
+
+export type RouteMode =
+  | "cost-first"
+  | "speed-first"
+  | "trust-first"
+  | "attested-only"
+  | "provider-pinned"
+  | "budget-guarded"
+  | "fastest"
+  | "cheapest"
+  | "highest-reputation"
+  | "private-attested"
+  | "fixed-provider";
+
+export type LedgerMode = "none" | "solana";
+
+// ─── Config ──────────────────────────────────────────────────────────────────
+
+export interface TurnstileConfig {
   apiKey: string;
   baseURL?: string;
+  timeout?: number;
+  defaultRouteMode?: RouteMode;
+  defaultLedgerMode?: LedgerMode;
+}
+
+// Alias for backward compatibility
+export type TurnstileAIConfig = TurnstileConfig & {
   defaultPolicy?: string;
   defaultAnchor?: string;
-}
+};
+
+// ─── Chat completions ─────────────────────────────────────────────────────────
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -20,6 +47,20 @@ export interface ChatCompletionRequest {
     anchor?: string;
   };
 }
+
+export interface ChatCompletionChoice {
+  message: {
+    role: "assistant";
+    content: string;
+  };
+}
+
+export interface ChatCompletionResponse {
+  choices: ChatCompletionChoice[];
+  compute_receipt?: ComputeReceipt;
+}
+
+// ─── Receipts ─────────────────────────────────────────────────────────────────
 
 export interface ReceiptAnchor {
   chain: string;
@@ -41,49 +82,13 @@ export interface ComputeReceipt {
   anchor?: ReceiptAnchor | null;
 }
 
-export interface ChatCompletionChoice {
-  message: {
-    role: "assistant";
-    content: string;
-  };
-}
-
-export interface ChatCompletionResponse {
-  choices: ChatCompletionChoice[];
-  compute_receipt?: ComputeReceipt;
-}
-
 export interface ReceiptVerificationResponse {
   status: string;
   signatureValid: boolean;
   anchorMatched: boolean;
-=======
-export type RouteMode =
-  | "cost-first"
-  | "speed-first"
-  | "trust-first"
-  | "attested-only"
-  | "provider-pinned"
-  | "budget-guarded";
-
-export type LedgerMode = "none" | "solana";
-
-export interface TurnstileConfig {
-  apiKey: string;
-  baseURL?: string;
-  timeout?: number;
-  defaultRouteMode?: RouteMode;
-  defaultLedgerMode?: LedgerMode;
 }
 
-export interface InferenceOptions {
-  checkpoint?: boolean;
-  ledger?: LedgerMode;
-  routeMode?: RouteMode;
-  provider?: string;
-  maxSpendUsd?: number;
-  tags?: string[];
-}
+// ─── Run records ──────────────────────────────────────────────────────────────
 
 export interface LedgerCheckpoint {
   chain: "solana";
@@ -119,7 +124,12 @@ export interface VerificationResult {
   ledgerOk: boolean | null;
   status: "verified" | "pending" | "failed";
   message: string;
+  // Aliases for backward compatibility
+  signatureValid?: boolean;
+  anchorMatched?: boolean;
 }
+
+// ─── Providers ────────────────────────────────────────────────────────────────
 
 export interface ProviderHealth {
   id: string;
@@ -132,6 +142,8 @@ export interface ProviderHealth {
   lastUpdatedAt: string;
 }
 
+// ─── Usage ────────────────────────────────────────────────────────────────────
+
 export interface UsageOverview {
   period: "day" | "week" | "month";
   requests: number;
@@ -143,11 +155,26 @@ export interface UsageOverview {
   to: string;
 }
 
+// ─── Inference options ────────────────────────────────────────────────────────
+
+export interface InferenceOptions {
+  checkpoint?: boolean;
+  ledger?: LedgerMode;
+  routeMode?: RouteMode;
+  provider?: string;
+  maxSpendUsd?: number;
+  tags?: string[];
+}
+
+// ─── Error body ───────────────────────────────────────────────────────────────
+
 export interface TurnstileApiErrorBody {
   code?: string;
   message?: string;
   details?: unknown;
 }
+
+// ─── Chat (extended) ──────────────────────────────────────────────────────────
 
 export interface TurnstileChatMessage {
   role: "system" | "user" | "assistant";
@@ -156,22 +183,4 @@ export interface TurnstileChatMessage {
 
 export interface TurnstileChatRequest {
   model: string;
-  messages: TurnstileChatMessage[];
-  receipt?: boolean;
-  anchor?: "solana" | "off-chain" | "none";
-  routeMode?: RouteMode;
-  provider?: string;
-  maxSpendUsd?: number;
-  temperature?: number;
-  maxTokens?: number;
-}
-
-export interface TurnstileChatResult {
-  id: string;
-  model: string;
-  provider: string;
-  output: string;
-  record: RunRecord | null;
-  verification: VerificationResult | null;
->>>>>>> 5531b75e9745b637b2f4cfe96769787bdf64e51c
 }

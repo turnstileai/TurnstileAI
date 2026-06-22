@@ -1,4 +1,5 @@
 export { TurnstileAI } from "./client";
 export { ReceiptsResource } from "./receipts";
-export { TurnstileAIError, TurnstileAIAuthError, TurnstileAIAPIError, TurnstileAIVerificationError } from "./errors";
-export type { TurnstileAIConfig, ChatMessage, ChatCompletionRequest, ChatCompletionResponse, ChatCompletionChoice, ComputeReceipt, ReceiptAnchor, ReceiptVerificationResponse } from "./types";
+export { TurnstileError, TurnstileAuthError, TurnstileRequestError, TurnstileVerificationError, TurnstileAIError, TurnstileAIAuthError, TurnstileAIAPIError, TurnstileAIVerificationError, } from "./errors";
+export type { TurnstileConfig, TurnstileAIConfig, InferenceOptions, ChatMessage, ChatCompletionRequest, ChatCompletionResponse, ChatCompletionChoice, ComputeReceipt, ReceiptAnchor, ReceiptVerificationResponse, RunRecord, LedgerCheckpoint, VerificationResult, ProviderHealth, UsageOverview, RouteMode, LedgerMode, TurnstileApiErrorBody, } from "./types";
+//# sourceMappingURL=index.d.ts.map

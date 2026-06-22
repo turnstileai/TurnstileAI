@@ -1,35 +1,30 @@
 export { TurnstileAI } from "./client";
-<<<<<<< HEAD
 export { ReceiptsResource } from "./receipts";
 
+// Error classes
 export {
+  TurnstileError,
+  TurnstileAuthError,
+  TurnstileRequestError,
+  TurnstileVerificationError,
   TurnstileAIError,
   TurnstileAIAuthError,
   TurnstileAIAPIError,
-  TurnstileAIVerificationError
+  TurnstileAIVerificationError,
 } from "./errors";
 
+// Types
 export type {
+  TurnstileConfig,
   TurnstileAIConfig,
+  InferenceOptions,
   ChatMessage,
   ChatCompletionRequest,
   ChatCompletionResponse,
   ChatCompletionChoice,
   ComputeReceipt,
   ReceiptAnchor,
-  ReceiptVerificationResponse
-} from "./types";
-=======
-export {
-  TurnstileError,
-  TurnstileAuthError,
-  TurnstileRequestError,
-  TurnstileVerificationError,
-} from "./errors";
-
-export type {
-  TurnstileConfig,
-  InferenceOptions,
+  ReceiptVerificationResponse,
   RunRecord,
   LedgerCheckpoint,
   VerificationResult,
@@ -39,4 +34,3 @@ export type {
   LedgerMode,
   TurnstileApiErrorBody,
 } from "./types";
->>>>>>> 5531b75e9745b637b2f4cfe96769787bdf64e51c

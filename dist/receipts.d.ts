@@ -5,3 +5,4 @@ export declare class ReceiptsResource {
     get(id: string): Promise<ComputeReceipt>;
     verify(id: string): Promise<ReceiptVerificationResponse>;
 }
+//# sourceMappingURL=receipts.d.ts.map

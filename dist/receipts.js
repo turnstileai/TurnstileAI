@@ -22,3 +22,4 @@ class ReceiptsResource {
     }
 }
 exports.ReceiptsResource = ReceiptsResource;
+//# sourceMappingURL=receipts.js.map

@@ -1,37 +1,62 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TurnstileAIVerificationError = exports.TurnstileAIAPIError = exports.TurnstileAIAuthError = exports.TurnstileAIError = void 0;
-class TurnstileAIError extends Error {
+exports.TurnstileAIVerificationError = exports.TurnstileAIAPIError = exports.TurnstileAIAuthError = exports.TurnstileAIError = exports.TurnstileVerificationError = exports.TurnstileRequestError = exports.TurnstileAuthError = exports.TurnstileError = void 0;
+// Base errors
+class TurnstileError extends Error {
     constructor(message) {
         super(message);
-        this.name = "TurnstileAIError";
+        this.name = "TurnstileError";
         Object.setPrototypeOf(this, new.target.prototype);
     }
 }
-exports.TurnstileAIError = TurnstileAIError;
-class TurnstileAIAuthError extends TurnstileAIError {
+exports.TurnstileError = TurnstileError;
+class TurnstileAuthError extends TurnstileError {
     constructor(message = "Authentication failed") {
         super(message);
-        this.name = "TurnstileAIAuthError";
+        this.name = "TurnstileAuthError";
         Object.setPrototypeOf(this, new.target.prototype);
     }
 }
-exports.TurnstileAIAuthError = TurnstileAIAuthError;
-class TurnstileAIAPIError extends TurnstileAIError {
-    constructor(statusCode, message = "API request failed") {
+exports.TurnstileAuthError = TurnstileAuthError;
+class TurnstileRequestError extends TurnstileError {
+    constructor(message, statusCode, code) {
         super(message);
-        this.name = "TurnstileAIAPIError";
+        this.name = "TurnstileRequestError";
         this.statusCode = statusCode;
+        this.code = code;
         Object.setPrototypeOf(this, new.target.prototype);
+    }
+}
+exports.TurnstileRequestError = TurnstileRequestError;
+class TurnstileVerificationError extends TurnstileError {
+    constructor(message, recordId) {
+        super(message);
+        this.name = "TurnstileVerificationError";
+        this.recordId = recordId;
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
+}
+exports.TurnstileVerificationError = TurnstileVerificationError;
+// Legacy aliases — kept for backward compatibility with existing SDK exports
+class TurnstileAIError extends TurnstileError {
+}
+exports.TurnstileAIError = TurnstileAIError;
+class TurnstileAIAuthError extends TurnstileAuthError {
+}
+exports.TurnstileAIAuthError = TurnstileAIAuthError;
+class TurnstileAIAPIError extends TurnstileRequestError {
+    constructor(statusCode, message = "API request failed") {
+        super(message, statusCode);
+        this.name = "TurnstileAIAPIError";
     }
 }
 exports.TurnstileAIAPIError = TurnstileAIAPIError;
-class TurnstileAIVerificationError extends TurnstileAIError {
+class TurnstileAIVerificationError extends TurnstileVerificationError {
     constructor(receiptId, message = "Receipt verification failed") {
-        super(message);
+        super(message, receiptId);
         this.name = "TurnstileAIVerificationError";
         this.receiptId = receiptId;
-        Object.setPrototypeOf(this, new.target.prototype);
     }
 }
 exports.TurnstileAIVerificationError = TurnstileAIVerificationError;
+//# sourceMappingURL=errors.js.map

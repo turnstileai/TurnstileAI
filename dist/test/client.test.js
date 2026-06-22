@@ -18,3 +18,4 @@ const client_1 = require("../client");
     });
     strict_1.default.ok(client.receipts);
 });
+//# sourceMappingURL=client.test.js.map
