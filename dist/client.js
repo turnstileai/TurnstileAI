@@ -7,6 +7,8 @@ exports.TurnstileAI = void 0;
 const openai_1 = __importDefault(require("openai"));
 const errors_1 = require("./errors");
 const DEFAULT_BASE_URL = "https://gateway.turnstileai.net/api";
+const DEFAULT_MAX_RETRIES = 2;
+const RETRYABLE_STATUSES = [429, 500, 502, 503, 504];
 class TurnstileAI {
     constructor(config) {
         this.receipts = {
@@ -65,10 +67,12 @@ class TurnstileAI {
         this.apiKey = config.apiKey;
         this.baseURL = config.baseURL ?? DEFAULT_BASE_URL;
         this.timeout = config.timeout ?? 60000;
+        this.maxRetries = config.maxRetries ?? DEFAULT_MAX_RETRIES;
         this.http = new openai_1.default({
             apiKey: this.apiKey,
             baseURL: this.baseURL,
             timeout: this.timeout,
+            maxRetries: this.maxRetries,
             defaultHeaders: {
                 "X-TurnstileAI-SDK": "@turnstileai/sdk",
             },
@@ -77,7 +81,7 @@ class TurnstileAI {
         this.completions = this.http.completions;
         this.models = this.http.models;
     }
-    async request(path, init) {
+    async request(path, init, attempt = 0) {
         const res = await fetch(`${this.baseURL}${path}`, {
             ...init,
             headers: {
@@ -91,6 +95,12 @@ class TurnstileAI {
             throw new errors_1.TurnstileAuthError("Invalid or expired TurnstileAI API key.");
         }
         if (!res.ok) {
+            const shouldRetry = RETRYABLE_STATUSES.includes(res.status) && attempt < this.maxRetries;
+            if (shouldRetry) {
+                const delay = Math.pow(2, attempt) * 300;
+                await new Promise((r) => setTimeout(r, delay));
+                return this.request(path, init, attempt + 1);
+            }
             let body = {};
             try {
                 body = await res.json();

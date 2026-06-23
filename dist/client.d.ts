@@ -5,6 +5,7 @@ export declare class TurnstileAI {
     private readonly apiKey;
     private readonly baseURL;
     private readonly timeout;
+    private readonly maxRetries;
     private readonly http;
     readonly chat: OpenAI["chat"];
     readonly completions: OpenAI["completions"];
