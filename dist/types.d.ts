@@ -4,6 +4,7 @@ export interface TurnstileConfig {
     apiKey: string;
     baseURL?: string;
     timeout?: number;
+    maxRetries?: number;
     defaultRouteMode?: RouteMode;
     defaultLedgerMode?: LedgerMode;
 }

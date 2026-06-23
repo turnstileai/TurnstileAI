@@ -16,11 +16,14 @@ import type {
 import type { InclusionProof } from "./receipts";
 
 const DEFAULT_BASE_URL = "https://gateway.turnstileai.net/api";
+const DEFAULT_MAX_RETRIES = 2;
+const RETRYABLE_STATUSES = [429, 500, 502, 503, 504];
 
 export class TurnstileAI {
   private readonly apiKey: string;
   private readonly baseURL: string;
   private readonly timeout: number;
+  private readonly maxRetries: number;
   private readonly http: OpenAI;
 
   public readonly chat: OpenAI["chat"];
@@ -35,11 +38,13 @@ export class TurnstileAI {
     this.apiKey = config.apiKey;
     this.baseURL = config.baseURL ?? DEFAULT_BASE_URL;
     this.timeout = config.timeout ?? 60000;
+    this.maxRetries = config.maxRetries ?? DEFAULT_MAX_RETRIES;
 
     this.http = new OpenAI({
       apiKey: this.apiKey,
       baseURL: this.baseURL,
       timeout: this.timeout,
+      maxRetries: this.maxRetries,
       defaultHeaders: {
         "X-TurnstileAI-SDK": "@turnstileai/sdk",
       },
@@ -113,7 +118,11 @@ export class TurnstileAI {
     }
   };
 
-  private async request<T>(path: string, init?: RequestInit): Promise<T> {
+  private async request<T>(
+    path: string,
+    init?: RequestInit,
+    attempt = 0
+  ): Promise<T> {
     const res = await fetch(`${this.baseURL}${path}`, {
       ...init,
       headers: {
@@ -129,10 +138,17 @@ export class TurnstileAI {
     }
 
     if (!res.ok) {
+      const shouldRetry =
+        RETRYABLE_STATUSES.includes(res.status) && attempt < this.maxRetries;
+
+      if (shouldRetry) {
+        const delay = Math.pow(2, attempt) * 300;
+        await new Promise((r) => setTimeout(r, delay));
+        return this.request<T>(path, init, attempt + 1);
+      }
+
       let body: any = {};
-      try {
-        body = await res.json();
-      } catch {}
+      try { body = await res.json(); } catch {}
 
       throw new TurnstileRequestError(
         body?.message ?? `Request failed with status ${res.status}`,
