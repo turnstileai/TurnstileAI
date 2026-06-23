@@ -1,5 +1,5 @@
 {
-  "name": "@turnstileai/sdk",
+"name": "turnstileai",
   "version": "0.1.22",
   "description": "Official TypeScript/JavaScript SDK for the TurnstileAI verifiable inference gateway.",
   "main": "dist/index.js",
